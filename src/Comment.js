@@ -8,13 +8,13 @@ module.exports = React.createClass({
   render: function () {
     return (
       <div className="comment">
-        <h4 className="comment-title">
+        <h4 className="comment__title">
           {this.props.data.subject[0].value}
         </h4>
-        <div className="comment-body">
+        <div className="comment__body">
           <div dangerouslySetInnerHTML={this.rawMarkup()} />
         </div>
-        <span>posted by {(this.props.data.name) ? this.props.data.name[0].value : 'anonymous'}</span>
+        <strong class="comment__author">Posted by {(this.props.data.name) ? this.props.data.name[0].value : 'anonymous'}</strong>
       </div>
     );
   }
