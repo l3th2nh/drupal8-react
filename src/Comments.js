@@ -50,8 +50,6 @@ module.exports = React.createClass({
       ]};
 
     var postComment = function (csrfToken, comment) {
-      console.log(csrfToken);
-      console.log(JSON.stringify(comment));
       $.ajaxSetup({ cache: false });
       $.ajax({
         url: Settings.api.url + 'entity/comment?' + Settings.api.format,
@@ -63,15 +61,14 @@ module.exports = React.createClass({
           },
         data: JSON.stringify(comment),
         success: function (data) {
-            console.log(data);
-            console.log('success')
+          this.loadComments();
           }.bind(this),
         error: function(xhr, status, err) {
           console.log(Settings.api.url + 'entity/comment?' + Settings.api.format);
             console.error(status, err);
           }.bind(this)
       });
-    };
+    }.bind(this);
 
     getCsrfToken(function (csrfToken) {
       postComment(csrfToken, newComment);

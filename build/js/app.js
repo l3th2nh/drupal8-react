@@ -37334,8 +37334,6 @@ module.exports = React.createClass({
       "comment_body": [{ "value": "<p>" + comment.message + "</p>", "format": "basic_html" }] };
 
     var postComment = function (csrfToken, comment) {
-      console.log(csrfToken);
-      console.log(JSON.stringify(comment));
       $.ajaxSetup({ cache: false });
       $.ajax({
         url: Settings.api.url + 'entity/comment?' + Settings.api.format,
@@ -37347,15 +37345,14 @@ module.exports = React.createClass({
         },
         data: JSON.stringify(comment),
         success: function (data) {
-          console.log(data);
-          console.log('success');
+          this.loadComments();
         }.bind(this),
         error: function (xhr, status, err) {
           console.log(Settings.api.url + 'entity/comment?' + Settings.api.format);
           console.error(status, err);
         }.bind(this)
       });
-    };
+    }.bind(this);
 
     getCsrfToken(function (csrfToken) {
       postComment(csrfToken, newComment);
@@ -37657,7 +37654,7 @@ module.exports = React.createClass({
         this.props.data.body[0].value
       ),
       (() => {
-        if (this.props.data.comment[0].comment_count != 0 && this.props.type != 'news') {
+        if (this.props.type != 'news') {
           return React.createElement(Comments, { nid: this.props.data.nid[0].value });
         }
       })()

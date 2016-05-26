@@ -22,7 +22,7 @@ module.exports = React.createClass({
           {this.props.data.body[0].value}
         </div>
         {(()=> {
-          if (this.props.data.comment[0].comment_count != 0 && this.props.type != 'news') {
+          if (this.props.type != 'news') {
             return (<Comments nid={this.props.data.nid[0].value} />);
           }
         })()}
