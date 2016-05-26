@@ -4,6 +4,7 @@ var $ = jQuery = require('jquery');
 var ReactRouter = require('react-router');
 var Link = ReactRouter.Link;
 var Settings = require('./Settings');
+var Comments = require('./Comments');
 
 module.exports = React.createClass({
   render: function () {
@@ -20,6 +21,11 @@ module.exports = React.createClass({
         <div className="node__body">
           {this.props.data.body[0].value}
         </div>
+        {(()=> {
+          if (this.props.data.comment[0].comment_count != 0 && this.props.type != 'news') {
+            return (<Comments nid={this.props.data.nid[0].value} />);
+          }
+        })()}
       </div>
     );
   }

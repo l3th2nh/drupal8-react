@@ -13,7 +13,6 @@ module.exports = React.createClass({
     return {data: []};
   },
   componentDidMount: function () {
-    console.log(this.props);
     this.loadNode();
   },
   render: function () {

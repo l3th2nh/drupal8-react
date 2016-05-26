@@ -37094,7 +37094,11 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"./Node":254,"./Settings.js":255,"jquery":61,"react":239}],243:[function(require,module,exports){
+=======
+},{"./Node":255,"./Settings.js":256,"jquery":61,"react":239}],243:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 var Header = require('./Header');
 var Home = require('./Home');
@@ -37130,6 +37134,7 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"./Header":247,"./Home":248,"./Sidebar":256,"react":239}],244:[function(require,module,exports){
 var React = require('react');
 var $ = jQuery = require('jquery');
@@ -37159,16 +37164,53 @@ module.exports = React.createClass({
       'div',
       { className: 'chat' },
       messages
+=======
+},{"./Header":248,"./Home":249,"react":239}],244:[function(require,module,exports){
+var React = require('react');
+
+module.exports = React.createClass({
+  displayName: "exports",
+
+  rawMarkup: function () {
+    var rawMarkup = this.props.data.comment_body[0].value.toString();
+    return { __html: rawMarkup };
+  },
+  render: function () {
+    return React.createElement(
+      "div",
+      { className: "comment" },
+      React.createElement(
+        "h4",
+        { className: "comment__title" },
+        this.props.data.subject[0].value
+      ),
+      React.createElement(
+        "div",
+        { className: "comment__body" },
+        React.createElement("div", { dangerouslySetInnerHTML: this.rawMarkup() })
+      ),
+      React.createElement(
+        "strong",
+        { "class": "comment__author" },
+        "Posted by ",
+        this.props.data.name ? this.props.data.name[0].value : 'anonymous'
+      )
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
     );
   }
 });
 
+<<<<<<< HEAD
 },{"./ChatMessage":245,"./Settings":255,"jquery":61,"react":239}],245:[function(require,module,exports){
+=======
+},{"react":239}],245:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 
 module.exports = React.createClass({
   displayName: 'exports',
 
+<<<<<<< HEAD
   render: function () {
     return React.createElement(
       'p',
@@ -37181,12 +37223,167 @@ module.exports = React.createClass({
         null,
         '-- posted by ',
         this.props.data.field_chat_name ? this.props.data.field_chat_name[0].value : 'anonymous'
+=======
+  getInitialState: function () {
+    return { author: '', message: '' };
+  },
+  handleAuthorChange: function (e) {
+    this.setState({ author: e.target.value });
+  },
+  handleMessageChange: function (e) {
+    this.setState({ message: e.target.value });
+  },
+  handleSubmit: function (e) {
+    e.preventDefault();
+    var author = this.state.author.trim();
+    var message = this.state.message.trim();
+    if (!author || !message) {
+      return;
+    };
+    this.props.onCommentSubmit({ author: author, message: message });
+
+    this.setState({ message: '' });
+  },
+  render: function () {
+    return React.createElement(
+      'form',
+      { className: 'comment-form', onSubmit: this.handleSubmit },
+      React.createElement(
+        'legend',
+        null,
+        'Add new comment'
+      ),
+      React.createElement(
+        'div',
+        { 'class': 'form-group' },
+        React.createElement(
+          'label',
+          null,
+          'Name'
+        ),
+        React.createElement('input', {
+          type: 'text',
+          className: 'form-control',
+          placeholder: 'Your name',
+          value: this.state.author,
+          onChange: this.handleAuthorChange
+        }),
+        React.createElement(
+          'label',
+          null,
+          'Comment'
+        ),
+        React.createElement('textarea', {
+          className: 'form-control',
+          onChange: this.handleMessageChange,
+          value: this.state.message }),
+        React.createElement('input', { type: 'submit', className: 'btn btn-primary', value: 'Post' })
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
       )
     );
   }
 });
 
 },{"react":239}],246:[function(require,module,exports){
+<<<<<<< HEAD
+=======
+var React = require('react');
+var $ = jQuery = require('jquery');
+var Comment = require('./Comment');
+var CommentForm = require('./CommentForm');
+var Settings = require('./Settings');
+module.exports = React.createClass({
+  displayName: 'exports',
+
+  loadComments: function () {
+    $.get(Settings.api.url + '/comments/export/' + this.props.nid).done(function (data) {
+      this.setState({ data: data });
+    }.bind(this));
+  },
+  componentDidMount: function () {
+    this.loadComments();
+  },
+  getInitialState: function () {
+    return { data: [] };
+  },
+  handleCommentSubmit: function (comment) {
+    var getCsrfToken = function (callback) {
+      $.get(Settings.api.url + '/rest/session/token').done(function (data) {
+        var csrfToken = data;
+        callback(csrfToken, comment);
+      });
+    };
+
+    var newComment = {
+      "_links": {
+        "type": {
+          "href": "http://api.shumpeikishi.com/rest/type/comment/comment"
+        },
+        "http://api.shumpeikishi.com/rest/relation/comment/comment/entity_id": [{
+          "href": "http://api.shumpeikishi.com/node/" + this.props.nid + "?_format=hal_json"
+        }],
+        "http://api.shumpeikishi.com/rest/relation/comment/comment/uid": [{
+          "href": "http://api.shumpeikishi.com/user/1?_format=hal_json",
+          "lang": "en"
+        }]
+      },
+      "uid": [{ "target_id": 1 }],
+      "entity_id": [{ "target_id": this.props.nid }],
+      "entity_type": [{ "value": "node" }],
+      "comment_type": [{ "target_id": "comment" }],
+      "subject": [{ "value": "New Comment" }],
+      "comment_body": [{ "value": "<p>" + comment.message + "</p>", "format": "basic_html" }] };
+
+    var postComment = function (csrfToken, comment) {
+      console.log(csrfToken);
+      console.log(JSON.stringify(comment));
+      $.ajaxSetup({ cache: false });
+      $.ajax({
+        url: Settings.api.url + 'entity/comment?' + Settings.api.format,
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/hal+json",
+          "Authorization": "Basic YXBpOkNhdHNBbmREb2dz",
+          "X-CSRF-Token": csrfToken
+        },
+        data: JSON.stringify(comment),
+        success: function (data) {
+          console.log(data);
+          console.log('success');
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.log(Settings.api.url + 'entity/comment?' + Settings.api.format);
+          console.error(status, err);
+        }.bind(this)
+      });
+    };
+
+    getCsrfToken(function (csrfToken) {
+      postComment(csrfToken, newComment);
+    });
+  },
+  render: function () {
+    var comments = this.state.data.map(function (comment) {
+      return React.createElement(Comment, { key: comment.cid[0].value, data: comment });
+    });
+
+    return React.createElement(
+      'div',
+      { className: 'comments' },
+      React.createElement(
+        'h3',
+        { className: 'comments-header' },
+        'Comments'
+      ),
+      comments,
+      React.createElement(CommentForm, { onCommentSubmit: this.handleCommentSubmit }),
+      React.createElement('p', null)
+    );
+  }
+});
+
+},{"./Comment":244,"./CommentForm":245,"./Settings":256,"jquery":61,"react":239}],247:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 
 module.exports = React.createClass({
@@ -37201,7 +37398,11 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"react":239}],247:[function(require,module,exports){
+=======
+},{"react":239}],248:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 var MobileMenuButton = require('./MobileMenuButton');
 var NavbarCollapse = require('./NavbarCollapse');
@@ -37232,7 +37433,11 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"./MobileMenuButton":250,"./NavbarCollapse":251,"react":239}],248:[function(require,module,exports){
+=======
+},{"./MobileMenuButton":251,"./NavbarCollapse":252,"react":239}],249:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 var $ = jQuery = require('jquery');
 var Node = require('./Node');
@@ -37265,7 +37470,11 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"./Node":254,"./Settings.js":255,"jquery":61,"react":239}],249:[function(require,module,exports){
+=======
+},{"./Node":255,"./Settings.js":256,"jquery":61,"react":239}],250:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 var ReactRouter = require('react-router');
 var Link = ReactRouter.Link;
@@ -37308,7 +37517,11 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"react":239,"react-router":94}],250:[function(require,module,exports){
+=======
+},{"react":239,"react-router":94}],251:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 
 module.exports = React.createClass({
@@ -37330,7 +37543,11 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"react":239}],251:[function(require,module,exports){
+=======
+},{"react":239}],252:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 var $ = jQuery = require('jquery');
 var MainMenu = require('./MainMenu');
@@ -37358,7 +37575,11 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"./MainMenu":249,"jquery":61,"react":239}],252:[function(require,module,exports){
+=======
+},{"./MainMenu":250,"jquery":61,"react":239}],253:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 var $ = jQuery = require('jquery');
 var Node = require('./Node');
@@ -37391,7 +37612,11 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"./Node":254,"./Settings.js":255,"jquery":61,"react":239}],253:[function(require,module,exports){
+=======
+},{"./Node":255,"./Settings.js":256,"jquery":61,"react":239}],254:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 var $ = jQuery = require('jquery');
 var Node = require('./Node');
@@ -37409,7 +37634,6 @@ module.exports = React.createClass({
     return { data: [] };
   },
   componentDidMount: function () {
-    console.log(this.props);
     this.loadNode();
   },
   render: function () {
@@ -37425,13 +37649,18 @@ module.exports = React.createClass({
   }
 });
 
+<<<<<<< HEAD
 },{"./Node":254,"./Settings.js":255,"jquery":61,"react":239}],254:[function(require,module,exports){
+=======
+},{"./Node":255,"./Settings.js":256,"jquery":61,"react":239}],255:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var React = require('react');
 var ReactDOM = require('react-dom');
 var $ = jQuery = require('jquery');
 var ReactRouter = require('react-router');
 var Link = ReactRouter.Link;
 var Settings = require('./Settings');
+var Comments = require('./Comments');
 
 module.exports = React.createClass({
   displayName: 'exports',
@@ -37460,12 +37689,21 @@ module.exports = React.createClass({
         'div',
         { className: 'node__body' },
         this.props.data.body[0].value
-      )
+      ),
+      (() => {
+        if (this.props.data.comment[0].comment_count != 0 && this.props.type != 'news') {
+          return React.createElement(Comments, { nid: this.props.data.nid[0].value });
+        }
+      })()
     );
   }
 });
 
+<<<<<<< HEAD
 },{"./Settings":255,"jquery":61,"react":239,"react-dom":64,"react-router":94}],255:[function(require,module,exports){
+=======
+},{"./Comments":246,"./Settings":256,"jquery":61,"react":239,"react-dom":64,"react-router":94}],256:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 module.exports = {
   api: {
     url: 'http://api.shumpeikishi.com/',
@@ -37474,6 +37712,7 @@ module.exports = {
   }
 };
 
+<<<<<<< HEAD
 },{}],256:[function(require,module,exports){
 var React = require('react');
 var Chat = require('./Chat');
@@ -37490,6 +37729,9 @@ module.exports = React.createClass({
 });
 
 },{"./Chat":244,"react":239}],257:[function(require,module,exports){
+=======
+},{}],257:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 var ReactDOM = require('react-dom');
 var React = require('react');
 var ReactRouter = require('react-router');
@@ -37521,7 +37763,11 @@ ReactDOM.render(React.createElement(
   )
 ), document.getElementById('wrapper'));
 
+<<<<<<< HEAD
 },{"./About":242,"./App":243,"./Contact":246,"./News":252,"./NewsArticle":253,"bootstrap":1,"jquery":61,"react":239,"react-dom":64,"react-router":94}],258:[function(require,module,exports){
+=======
+},{"./About":242,"./App":243,"./Contact":247,"./News":253,"./NewsArticle":254,"bootstrap":1,"jquery":61,"react":239,"react-dom":64,"react-router":94}],258:[function(require,module,exports){
+>>>>>>> 166eab7591efb3bf8a1e1ddc654c1decfc689cab
 // shim for using process in browser
 
 var process = module.exports = {};
