@@ -37157,7 +37157,12 @@ module.exports = React.createClass({
     });
     return React.createElement(
       'div',
-      { className: 'chat' },
+      { className: 'chat well well-sm' },
+      React.createElement(
+        'h3',
+        { className: 'chat-heading' },
+        'Live Chat'
+      ),
       messages
     );
   }

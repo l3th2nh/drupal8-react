@@ -23,7 +23,8 @@ module.exports = React.createClass({
       );
     });
     return (
-      <div className="chat">
+      <div className="chat well well-sm">
+        <h3 className="chat-heading">Live Chat</h3>
         {messages}
       </div>
     );
