@@ -37630,7 +37630,7 @@ module.exports = React.createClass({
   },
   render: function () {
     var nodes = this.state.data.map(function (node) {
-      return React.createElement(Node, { key: node.nid[0].value, data: node });
+      return React.createElement(Node, { key: node.nid[0].value, data: node, type: 'news-article' });
     });
 
     return React.createElement(
@@ -37679,7 +37679,7 @@ module.exports = React.createClass({
         this.props.data.body[0].value
       ),
       (() => {
-        if (this.props.type != 'news') {
+        if (this.props.type == 'news-article') {
           return React.createElement(Comments, { nid: this.props.data.nid[0].value });
         }
       })()

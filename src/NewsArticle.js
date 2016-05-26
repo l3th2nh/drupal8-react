@@ -18,7 +18,7 @@ module.exports = React.createClass({
   render: function () {
     var nodes = this.state.data.map(function (node) {
       return (
-        <Node key={node.nid[0].value} data={node}/>
+        <Node key={node.nid[0].value} data={node} type="news-article"/>
       );
     });
 
