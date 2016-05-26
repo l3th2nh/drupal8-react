@@ -17,7 +17,6 @@ module.exports = React.createClass({
     if (!author || !message) {
       return;
     };
-    console.log(this.props.onCommentSubmit);
     this.props.onCommentSubmit({author: author, message: message});
 
     this.setState({message: ''});

@@ -37180,7 +37180,6 @@ module.exports = React.createClass({
     if (!author || !message) {
       return;
     };
-    console.log(this.props.onCommentSubmit);
     this.props.onCommentSubmit({ author: author, message: message });
 
     this.setState({ message: '' });
@@ -37245,38 +37244,59 @@ module.exports = React.createClass({
     return { data: [] };
   },
   handleCommentSubmit: function (comment) {
-    var dataBody = {
+    var getCsrfToken = function (callback) {
+      $.get(Settings.api.url + '/rest/session/token').done(function (data) {
+        var csrfToken = data;
+        callback(csrfToken, comment);
+      });
+    };
+
+    var newComment = {
       "_links": {
         "type": {
           "href": "http://api.shumpeikishi.com/rest/type/comment/comment"
-        }
+        },
+        "http://api.shumpeikishi.com/rest/relation/comment/comment/entity_id": [{
+          "href": "http://api.shumpeikishi.com/node/" + this.props.nid + "?_format=hal_json"
+        }],
+        "http://api.shumpeikishi.com/rest/relation/comment/comment/uid": [{
+          "href": "http://api.shumpeikishi.com/user/1?_format=hal_json",
+          "lang": "en"
+        }]
       },
       "uid": [{ "target_id": 1 }],
       "entity_id": [{ "target_id": this.props.nid }],
       "entity_type": [{ "value": "node" }],
       "comment_type": [{ "target_id": "comment" }],
-
       "subject": [{ "value": "New Comment" }],
       "comment_body": [{ "value": "<p>" + comment.message + "</p>", "format": "basic_html" }] };
 
-    $.ajax({
-      url: Settings.api.url + 'entity/comment?' + Settings.api.format,
-      dataType: 'hal+json',
-      method: 'POST',
-      headers: {
-        "Accept": "application/hal+json",
-        "Content-Type": "application/hal+json",
-        "Authorization": "Basic c2h1bXBlaTpSVWZlaXIxMA==",
-        "X-CSRF-Token": "WxxDVpLpkLNr375lyzl58U3SMcA6IpLycDXXnLUTt5o"
-      },
-      data: dataBody,
-      success: function (data) {
-        console.log(data);
-      }.bind(this),
-      error: function (xhr, status, err) {
-        console.log(dataBody);
-        console.error(this.props.url, status, err.toString());
-      }.bind(this)
+    var postComment = function (csrfToken, comment) {
+      console.log(csrfToken);
+      console.log(JSON.stringify(comment));
+      $.ajaxSetup({ cache: false });
+      $.ajax({
+        url: Settings.api.url + 'entity/comment?' + Settings.api.format,
+        method: 'POST',
+        headers: {
+          "Content-Type": "application/hal+json",
+          "Authorization": "Basic YXBpOkNhdHNBbmREb2dz",
+          "X-CSRF-Token": csrfToken
+        },
+        data: JSON.stringify(comment),
+        success: function (data) {
+          console.log(data);
+          console.log('success');
+        }.bind(this),
+        error: function (xhr, status, err) {
+          console.log(Settings.api.url + 'entity/comment?' + Settings.api.format);
+          console.error(status, err);
+        }.bind(this)
+      });
+    };
+
+    getCsrfToken(function (csrfToken) {
+      postComment(csrfToken, newComment);
     });
   },
   render: function () {
