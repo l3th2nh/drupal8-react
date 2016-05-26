@@ -64,7 +64,6 @@ module.exports = React.createClass({
           this.loadComments();
           }.bind(this),
         error: function(xhr, status, err) {
-          console.log(Settings.api.url + 'entity/comment?' + Settings.api.format);
             console.error(status, err);
           }.bind(this)
       });
