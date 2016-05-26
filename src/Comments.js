@@ -44,10 +44,14 @@ module.exports = React.createClass({
       "entity_id":[{"target_id": this.props.nid}],
       "entity_type":[{"value":"node"}],
       "comment_type":[{"target_id":"comment"}],
-      "subject":[{"value":"New Comment"}],
+      "subject":[{"value": comment.subject}],
       "comment_body":[
         {"value":"<p>" + comment.message + "</p>","format":"basic_html"}
-      ]};
+      ],
+      "field_comment_author": [
+        {"value": comment.author}
+      ]
+    };
 
     var postComment = function (csrfToken, comment) {
       $.ajaxSetup({ cache: false });

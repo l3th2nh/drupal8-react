@@ -37199,22 +37199,30 @@ module.exports = React.createClass({
   render: function () {
     return React.createElement(
       "div",
-      { className: "comment" },
+      { className: "comment panel panel-default" },
       React.createElement(
-        "h4",
-        { className: "comment__title" },
-        this.props.data.subject[0].value
+        "div",
+        { className: "panel-heading" },
+        React.createElement(
+          "h4",
+          { className: "comment__title panel-title" },
+          this.props.data.subject[0].value
+        )
       ),
       React.createElement(
         "div",
-        { className: "comment__body" },
-        React.createElement("div", { dangerouslySetInnerHTML: this.rawMarkup() })
-      ),
-      React.createElement(
-        "strong",
-        { "class": "comment__author" },
-        "Posted by ",
-        this.props.data.name ? this.props.data.name[0].value : 'anonymous'
+        { className: "panel-body" },
+        React.createElement(
+          "div",
+          { className: "comment__body" },
+          React.createElement("div", { dangerouslySetInnerHTML: this.rawMarkup() })
+        ),
+        React.createElement(
+          "strong",
+          { "class": "comment__author" },
+          "Posted by ",
+          this.props.data.field_comment_author ? this.props.data.field_comment_author[0].value : 'anonymous'
+        )
       )
     );
   }
@@ -37227,10 +37235,13 @@ module.exports = React.createClass({
   displayName: 'exports',
 
   getInitialState: function () {
-    return { author: '', message: '' };
+    return { author: '', message: '', subject: '' };
   },
   handleAuthorChange: function (e) {
     this.setState({ author: e.target.value });
+  },
+  handleSubjectChange: function (e) {
+    this.setState({ subject: e.target.value });
   },
   handleMessageChange: function (e) {
     this.setState({ message: e.target.value });
@@ -37238,13 +37249,14 @@ module.exports = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault();
     var author = this.state.author.trim();
+    var subject = this.state.subject.trim();
     var message = this.state.message.trim();
-    if (!author || !message) {
+    if (!author || !message || !subject) {
       return;
     };
-    this.props.onCommentSubmit({ author: author, message: message });
+    this.props.onCommentSubmit({ author: author, message: message, subject: subject });
 
-    this.setState({ message: '' });
+    this.setState({ message: '', subject: '' });
   },
   render: function () {
     return React.createElement(
@@ -37269,6 +37281,18 @@ module.exports = React.createClass({
           placeholder: 'Your name',
           value: this.state.author,
           onChange: this.handleAuthorChange
+        }),
+        React.createElement(
+          'label',
+          null,
+          'Subject'
+        ),
+        React.createElement('input', {
+          type: 'text',
+          className: 'form-control',
+          placeholder: 'Subject',
+          value: this.state.subject,
+          onChange: this.handleSubjectChange
         }),
         React.createElement(
           'label',
@@ -37330,8 +37354,10 @@ module.exports = React.createClass({
       "entity_id": [{ "target_id": this.props.nid }],
       "entity_type": [{ "value": "node" }],
       "comment_type": [{ "target_id": "comment" }],
-      "subject": [{ "value": "New Comment" }],
-      "comment_body": [{ "value": "<p>" + comment.message + "</p>", "format": "basic_html" }] };
+      "subject": [{ "value": comment.subject }],
+      "comment_body": [{ "value": "<p>" + comment.message + "</p>", "format": "basic_html" }],
+      "field_comment_author": [{ "value": comment.author }]
+    };
 
     var postComment = function (csrfToken, comment) {
       $.ajaxSetup({ cache: false });
@@ -37348,7 +37374,6 @@ module.exports = React.createClass({
           this.loadComments();
         }.bind(this),
         error: function (xhr, status, err) {
-          console.log(Settings.api.url + 'entity/comment?' + Settings.api.format);
           console.error(status, err);
         }.bind(this)
       });

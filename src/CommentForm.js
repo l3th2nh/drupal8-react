@@ -2,10 +2,13 @@ var React = require('react');
 
 module.exports = React.createClass({
   getInitialState: function () {
-    return {author: '', message: ''};
+    return {author: '', message: '', subject: ''};
   },
   handleAuthorChange: function (e) {
     this.setState({author: e.target.value});
+  },
+  handleSubjectChange: function (e) {
+    this.setState({subject: e.target.value});
   },
   handleMessageChange: function (e) {
     this.setState({message: e.target.value});
@@ -13,13 +16,14 @@ module.exports = React.createClass({
   handleSubmit: function (e) {
     e.preventDefault();
     var author = this.state.author.trim();
+    var subject = this.state.subject.trim();
     var message = this.state.message.trim();
-    if (!author || !message) {
+    if (!author || !message || !subject) {
       return;
     };
-    this.props.onCommentSubmit({author: author, message: message});
+    this.props.onCommentSubmit({author: author, message: message, subject: subject});
 
-    this.setState({message: ''});
+    this.setState({message: '', subject: ''});
   },
   render: function () {
     return (
@@ -34,6 +38,14 @@ module.exports = React.createClass({
           placeholder="Your name"
           value={this.state.author}
           onChange={this.handleAuthorChange}
+          />
+          <label>Subject</label>
+          <input
+          type="text"
+          className="form-control"
+          placeholder="Subject"
+          value={this.state.subject}
+          onChange={this.handleSubjectChange}
           />
           <label>Comment</label>
           <textarea
