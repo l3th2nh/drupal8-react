@@ -44,14 +44,16 @@ module.exports = React.createClass({
       "entity_id":[{"target_id": this.props.nid}],
       "entity_type":[{"value":"node"}],
       "comment_type":[{"target_id":"comment"}],
-      "subject":[{"value":"New Comment"}],
+      "subject":[{"value": comment.subject}],
       "comment_body":[
         {"value":"<p>" + comment.message + "</p>","format":"basic_html"}
-      ]};
+      ],
+      "field_comment_author": [
+        {"value": comment.author}
+      ]
+    };
 
     var postComment = function (csrfToken, comment) {
-      console.log(csrfToken);
-      console.log(JSON.stringify(comment));
       $.ajaxSetup({ cache: false });
       $.ajax({
         url: Settings.api.url + 'entity/comment?' + Settings.api.format,
@@ -63,15 +65,13 @@ module.exports = React.createClass({
           },
         data: JSON.stringify(comment),
         success: function (data) {
-            console.log(data);
-            console.log('success')
+          this.loadComments();
           }.bind(this),
         error: function(xhr, status, err) {
-          console.log(Settings.api.url + 'entity/comment?' + Settings.api.format);
             console.error(status, err);
           }.bind(this)
       });
-    };
+    }.bind(this);
 
     getCsrfToken(function (csrfToken) {
       postComment(csrfToken, newComment);
