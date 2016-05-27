@@ -10,4 +10,3 @@ On root directory,
 ## TODO
  - Create a contact form.
  - Create dynamic menu
- - Create comment for nodes..
