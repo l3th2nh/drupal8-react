@@ -9,4 +9,6 @@ On root directory,
 
 ## TODO
  - Create a contact form.
- - Create dynamic menu
+ - Create dynamic menu.
+ - Optimize POST action.
+ - Remove duplicate code.
