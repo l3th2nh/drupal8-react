@@ -3,6 +3,7 @@ var React = require('react');
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router
 var Route = ReactRouter.Route;
+var IndexRoute = ReactRouter.IndexRoute;
 var NotFoundRoute = ReactRouter.NotFoundRoute;
 var DefaultRoute = ReactRouter.DefaultRoute;
 var Link = ReactRouter.Link;
@@ -19,6 +20,7 @@ var NewsArticle = require('./NewsArticle');
 ReactDOM.render(
   <Router history={hashHistory}>
     <Route path="/" component={App}>
+      <IndexRoute component={Home} />
       <Route path="/about" component={About} />
       <Route path="/news" component={News} />
       <Route path="/article/:nid" component={NewsArticle} />
