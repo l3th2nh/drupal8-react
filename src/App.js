@@ -5,6 +5,7 @@ var Sidebar = require('./Sidebar');
 
 module.exports = React.createClass({
   render: function () {
+    console.log(this);
     return (
       <div>
         <Header />
