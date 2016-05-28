@@ -37142,7 +37142,7 @@ module.exports = React.createClass({
 
   loadChatMessages: function () {
     $.get(Settings.api.url + 'rest/chat?' + Settings.api.format).done(function (data) {
-      this.setState({ data: data });
+      this.setState({ data: data.reverse() });
     }.bind(this));
   },
   componentDidMount: function () {
@@ -37204,7 +37204,7 @@ module.exports = React.createClass({
     return { data: [] };
   },
   render: function () {
-    var messages = this.state.data.reverse().map(function (msg) {
+    var messages = this.state.data.map(function (msg) {
       return React.createElement(ChatMessage, { data: msg, key: msg.nid[0].value });
     });
     return React.createElement(
