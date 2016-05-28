@@ -12,6 +12,7 @@ var hashHistory = ReactRouter.hashHistory;
 var $ = jQuery = require('jquery');
 var Bootstrap = require('bootstrap');
 var App = require('./App');
+var Home = require('./Home');
 var About = require('./About');
 var Contact = require('./Contact');
 var News = require('./News');
@@ -24,7 +25,7 @@ ReactDOM.render(
       <Route path="/about" component={About} />
       <Route path="/news" component={News} />
       <Route path="/article/:nid" component={NewsArticle} />
-      <Route path="/Contact" component={Contact} />
+      <Route path="/contact" component={Contact} />
     </Route>
   </Router>
   , document.getElementById('wrapper')

@@ -4,16 +4,13 @@ var Node = require('./Node');
 var Settings = require('./Settings.js');
 
 module.exports = React.createClass({
-  loadNode: function () {
-    $.get(Settings.api.url + 'node/36' + '?' + Settings.api.format).done(function (node) {
-      this.setState({data: [node]});
-    }.bind(this));
-  },
   getInitialState: function () {
     return {data: []};
   },
   componentDidMount: function () {
-    this.loadNode();
+    this.props.loadNodes(36, function (data) {
+      this.setState({data: [data]});
+    }.bind(this));
   },
   render: function () {
     var nodes = this.state.data.map(function (node) {

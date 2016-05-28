@@ -37070,16 +37070,13 @@ var Settings = require('./Settings.js');
 module.exports = React.createClass({
   displayName: 'exports',
 
-  loadNode: function () {
-    $.get(Settings.api.url + 'node/36' + '?' + Settings.api.format).done(function (node) {
-      this.setState({ data: [node] });
-    }.bind(this));
-  },
   getInitialState: function () {
     return { data: [] };
   },
   componentDidMount: function () {
-    this.loadNode();
+    this.props.loadNodes(36, function (data) {
+      this.setState({ data: [data] });
+    }.bind(this));
   },
   render: function () {
     var nodes = this.state.data.map(function (node) {
@@ -37099,10 +37096,18 @@ var React = require('react');
 var Header = require('./Header');
 var Home = require('./Home');
 var Sidebar = require('./Sidebar');
+var $ = jQuery = require('jquery');
+var Settings = require('./Settings.js');
 
 module.exports = React.createClass({
   displayName: 'exports',
 
+  loadNodes: function (nid, callback) {
+    console.log(nid);
+    $.get(Settings.api.url + 'node/' + nid + '?' + Settings.api.format).done(function (node) {
+      callback(node);
+    }.bind(this));
+  },
   render: function () {
     return React.createElement(
       'div',
@@ -37117,7 +37122,7 @@ module.exports = React.createClass({
           React.createElement(
             'div',
             { className: 'col-xs-8' },
-            this.props.children || React.createElement(Home, null)
+            React.cloneElement(this.props.children, { loadNodes: this.loadNodes })
           ),
           React.createElement(
             'div',
@@ -37130,7 +37135,7 @@ module.exports = React.createClass({
   }
 });
 
-},{"./Header":251,"./Home":252,"./Sidebar":260,"react":239}],244:[function(require,module,exports){
+},{"./Header":251,"./Home":252,"./Settings.js":259,"./Sidebar":260,"jquery":61,"react":239}],244:[function(require,module,exports){
 var React = require('react');
 var $ = jQuery = require('jquery');
 var Settings = require('./Settings');
@@ -37578,16 +37583,13 @@ var Settings = require('./Settings.js');
 module.exports = React.createClass({
   displayName: 'exports',
 
-  loadNode: function () {
-    $.get(Settings.api.url + 'node/50' + '?' + Settings.api.format).done(function (node) {
-      this.setState({ data: [node] });
-    }.bind(this));
-  },
   getInitialState: function () {
     return { data: [] };
   },
   componentDidMount: function () {
-    this.loadNode();
+    this.props.loadNodes(50, function (data) {
+      this.setState({ data: [data] });
+    }.bind(this));
   },
   render: function () {
     var nodes = this.state.data.map(function (node) {
@@ -37837,6 +37839,7 @@ var React = require('react');
 var ReactRouter = require('react-router');
 var Router = ReactRouter.Router;
 var Route = ReactRouter.Route;
+var IndexRoute = ReactRouter.IndexRoute;
 var NotFoundRoute = ReactRouter.NotFoundRoute;
 var DefaultRoute = ReactRouter.DefaultRoute;
 var Link = ReactRouter.Link;
@@ -37845,6 +37848,7 @@ var hashHistory = ReactRouter.hashHistory;
 var $ = jQuery = require('jquery');
 var Bootstrap = require('bootstrap');
 var App = require('./App');
+var Home = require('./Home');
 var About = require('./About');
 var Contact = require('./Contact');
 var News = require('./News');
@@ -37856,14 +37860,15 @@ ReactDOM.render(React.createElement(
   React.createElement(
     Route,
     { path: '/', component: App },
+    React.createElement(IndexRoute, { component: Home }),
     React.createElement(Route, { path: '/about', component: About }),
     React.createElement(Route, { path: '/news', component: News }),
     React.createElement(Route, { path: '/article/:nid', component: NewsArticle }),
-    React.createElement(Route, { path: '/Contact', component: Contact })
+    React.createElement(Route, { path: '/contact', component: Contact })
   )
 ), document.getElementById('wrapper'));
 
-},{"./About":242,"./App":243,"./Contact":250,"./News":256,"./NewsArticle":257,"bootstrap":1,"jquery":61,"react":239,"react-dom":64,"react-router":94}],262:[function(require,module,exports){
+},{"./About":242,"./App":243,"./Contact":250,"./Home":252,"./News":256,"./NewsArticle":257,"bootstrap":1,"jquery":61,"react":239,"react-dom":64,"react-router":94}],262:[function(require,module,exports){
 // shim for using process in browser
 
 var process = module.exports = {};
